@@ -1,4 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+
+import { Store, Select } from '@ngxs/store';
+import { HeroAction } from '../hero.actions';
+import { HeroState } from '../hero.state';
+
 import { Hero } from '../hero';
 import { HeroService } from '../hero.service';
 
@@ -10,7 +16,13 @@ import { HeroService } from '../hero.service';
 export class DashboardComponent implements OnInit {
   heroes: Hero[] = [];
 
-  constructor(private heroService: HeroService) { }
+  /** ngxs Selector **/
+  @Select(HeroState.heroes) heroes$: Observable<Hero[]>
+
+  constructor(
+    private store: Store,
+    private heroService: HeroService
+  ) { }
 
   ngOnInit() {
     this.getHeroes();

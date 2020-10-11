@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Store, Select } from '@ngxs/store';
 
 import { Hero } from '../hero';
+import {HeroAction} from '../hero.actions';
 import { HeroService } from '../hero.service';
 
 @Component({
@@ -11,7 +13,10 @@ import { HeroService } from '../hero.service';
 export class HeroesComponent implements OnInit {
   heroes: Hero[];
 
-  constructor(private heroService: HeroService) { }
+  constructor(
+    private store: Store,
+    private heroService: HeroService
+  ) { }
 
   ngOnInit() {
     this.getHeroes();
@@ -23,14 +28,10 @@ export class HeroesComponent implements OnInit {
   }
 
   add(name: string): void {
-    console.log(name)
     name = name.trim();
-    console.log(name)
     if (!name) { return; }
-      this.heroService.addHero({ name } as Hero)
-        .subscribe(hero => {
-          this.heroes.push(hero);
-    });
+
+    this.store.dispatch(new HeroAction.Add({name} as Hero))
   }
 
   delete(hero: Hero): void {
